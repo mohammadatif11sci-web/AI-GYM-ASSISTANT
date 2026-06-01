@@ -16,8 +16,11 @@ async def food_analysis(
     file: UploadFile = File(...)
 ):
 
-    filename = file.filename
+    image_bytes = await file.read()
 
-    result = detect_food(filename)
+    result = detect_food(
+        image_bytes,
+        file.content_type
+    )
 
     return result

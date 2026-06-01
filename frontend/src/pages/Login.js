@@ -37,6 +37,11 @@ localStorage.setItem(
   response.data.token
 );
 
+localStorage.setItem(
+  "userEmail",
+  formData.email
+);
+
     alert(response.data.message);
 
     navigate("/dashboard");

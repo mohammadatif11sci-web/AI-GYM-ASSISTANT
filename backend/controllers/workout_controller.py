@@ -1,5 +1,6 @@
 from database.db import db
 from ai.posture_detection.performance_analyzer import analyze_workout
+from datetime import datetime
 
 def save_workout(workout):
 
@@ -25,6 +26,8 @@ def save_workout(workout):
         "level": analysis["level"],
 
         "feedback": analysis["feedback"],
+
+        "created_at": datetime.utcnow(),
     }
 
     db.workouts.insert_one(workout_data)

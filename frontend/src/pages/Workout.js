@@ -85,6 +85,13 @@ function Workout() {
     errorMessage,
   }) => {
     try {
+      const userEmail = localStorage.getItem("userEmail");
+
+      if (!userEmail) {
+        alert("Please log in before saving workout data.");
+        return;
+      }
+
       const stopResponse = await API.get(stopEndpoint);
       const finalReps = stopResponse.data.reps || 0;
       const finalCalories = Math.round(finalReps * caloriesPerRep);
@@ -97,7 +104,7 @@ function Workout() {
       setActiveCounter(null);
 
       const saveResponse = await API.post("/save-workout", {
-        email: "atif@gmail.com",
+        email: userEmail,
         workout_type: workoutType,
         reps: finalReps,
         calories: finalCalories,

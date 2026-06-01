@@ -183,7 +183,7 @@ function Dashboard() {
             </h2>
 
             <p className="text-3xl md:text-5xl font-bold text-green-400">
-              5 Days
+              {stats.current_streak || 0} Days
             </p>
 
           </div>

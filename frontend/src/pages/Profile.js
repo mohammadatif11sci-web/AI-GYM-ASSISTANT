@@ -11,31 +11,41 @@ function Profile() {
     useState(null);
 
   const email =
-    "mohammadatif11sci@gmail.com";
+    localStorage.getItem("userEmail");
 
   useEffect(() => {
 
+    const fetchStats = async () => {
+
+      try {
+
+        if (!email) {
+          setStats({
+            email: "",
+            total_workouts: 0,
+            total_calories: 0,
+            total_reps: 0
+          });
+          return;
+        }
+
+        const response =
+          await API.get(
+
+            `/user-stats/${email}`
+          );
+
+        setStats(response.data);
+
+      } catch (error) {
+
+        console.log(error);
+      }
+    };
+
     fetchStats();
 
-  }, []);
-
-  const fetchStats = async () => {
-
-    try {
-
-      const response =
-        await API.get(
-
-          `/user-stats/${email}`
-        );
-
-      setStats(response.data);
-
-    } catch (error) {
-
-      console.log(error);
-    }
-  };
+  }, [email]);
 
   if (!stats) {
 

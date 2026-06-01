@@ -1,14 +1,36 @@
+from datetime import datetime, timedelta
+
+from database.db import db
+
+
 def get_admin_stats():
+    since = datetime.utcnow() - timedelta(days=7)
 
-    stats = {
+    workouts = list(
+        db.workouts.find(
+            {},
+            {
+                "_id": 0,
+                "calories": 1
+            }
+        )
+    )
 
-        "total_users": 125,
+    active_users = db.workouts.distinct(
+        "email",
+        {
+            "created_at": {
+                "$gte": since
+            }
+        }
+    )
 
-        "total_workouts": 540,
-
-        "total_calories": 98000,
-
-        "active_users": 42
+    return {
+        "total_users": db.users.count_documents({}),
+        "total_workouts": len(workouts),
+        "total_calories": sum(
+            workout.get("calories", 0)
+            for workout in workouts
+        ),
+        "active_users": len(active_users)
     }
-
-    return stats

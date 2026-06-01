@@ -1,45 +1,65 @@
-def detect_food(image_name):
+import json
+import os
 
-    image_name = image_name.lower()
+from dotenv import load_dotenv
 
-    if "pizza" in image_name:
+load_dotenv()
 
+GOOGLE_AI_STUDIO_API_KEY = (
+    os.getenv("GOOGLE_AI_STUDIO_API_KEY")
+    or os.getenv("GEMINI_API_KEY")
+    or os.getenv("GOOGLE_API_KEY")
+)
+
+
+def detect_food(image_bytes, mime_type):
+    if not GOOGLE_AI_STUDIO_API_KEY:
         return {
-
-            "food": "Pepperoni Pizza",
-
-            "calories": "650 kcal",
-
-            "protein": "24g",
-
-            "advice":
-            "High calorie meal. Balance with cardio."
-        }
-
-    elif "burger" in image_name:
-
-        return {
-
-            "food": "Chicken Burger",
-
-            "calories": "540 kcal",
-
-            "protein": "30g",
-
-            "advice":
-            "Moderate protein meal. Avoid excess sauces."
-        }
-
-    else:
-
-        return {
-
-            "food": "Unknown Food",
-
+            "food": "Unavailable",
             "calories": "N/A",
-
             "protein": "N/A",
-
-            "advice":
-            "Unable to analyze image."
+            "advice": "Cloud food analysis is not configured."
         }
+
+    import google.generativeai as genai
+
+    genai.configure(api_key=GOOGLE_AI_STUDIO_API_KEY)
+
+    model = genai.GenerativeModel(
+        "gemini-2.5-flash"
+    )
+
+    response = model.generate_content(
+        [
+            (
+                "Analyze this food image. Return only JSON with these keys: "
+                "food, calories, protein, advice. Use concise values."
+            ),
+            {
+                "mime_type": mime_type,
+                "data": image_bytes
+            }
+        ]
+    )
+
+    text = response.text.strip()
+
+    if text.startswith("```"):
+        text = text.replace("```json", "").replace("```", "").strip()
+
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        data = {
+            "food": "Unknown",
+            "calories": "N/A",
+            "protein": "N/A",
+            "advice": text
+        }
+
+    return {
+        "food": data.get("food", "Unknown"),
+        "calories": data.get("calories", "N/A"),
+        "protein": data.get("protein", "N/A"),
+        "advice": data.get("advice", "")
+    }
