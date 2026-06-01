@@ -14,7 +14,7 @@ GOOGLE_AI_STUDIO_API_KEY = (
 MODEL_NAMES = [
     "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-1.5-flash",
+    "gemini-2.5-flash-lite",
 ]
 
 
@@ -31,7 +31,7 @@ def detect_food(image_bytes, mime_type):
 
     genai.configure(api_key=GOOGLE_AI_STUDIO_API_KEY)
 
-    last_error = None
+    errors = []
 
     for model_name in MODEL_NAMES:
         try:
@@ -56,13 +56,18 @@ def detect_food(image_bytes, mime_type):
             return parse_food_response(response.text)
 
         except Exception as error:
-            last_error = error
+            errors.append(
+                f"{model_name}: {error}"
+            )
 
     return {
         "food": "Unavailable",
         "calories": "N/A",
         "protein": "N/A",
-        "advice": f"Cloud food analysis failed: {last_error}"
+        "advice": (
+            "Cloud food analysis failed. Check Gemini API key/model access. "
+            + " | ".join(errors)
+        )
     }
 
 
