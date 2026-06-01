@@ -8,6 +8,8 @@ function Workout() {
   const [calories, setCalories] = useState(0);
   const [timer, setTimer] = useState(0);
   const [activeWorkout, setActiveWorkout] = useState(false);
+  const [activeCounter, setActiveCounter] = useState(null);
+  const [caloriesPerRep, setCaloriesPerRep] = useState(0);
 
   useEffect(() => {
     let interval;
@@ -21,6 +23,26 @@ function Workout() {
     return () => clearInterval(interval);
   }, [activeWorkout]);
 
+  useEffect(() => {
+    let interval;
+
+    if (activeCounter) {
+      interval = setInterval(async () => {
+        try {
+          const response = await API.get("/counter-status");
+          const currentReps = response.data[activeCounter].reps;
+
+          setReps(currentReps);
+          setCalories(Math.round(currentReps * caloriesPerRep));
+        } catch (error) {
+          console.error(error);
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [activeCounter, caloriesPerRep]);
+
   const showAnalysis = (analysis) => {
     alert(
       `AI Analysis\n\n` +
@@ -32,36 +54,61 @@ function Workout() {
 
   const startWorkout = async ({
     startEndpoint,
-    workoutType,
-    reps,
-    calories,
+    caloriesPerRep,
     startVoiceMessage,
     errorMessage,
+    counterType,
   }) => {
     try {
       const startResponse = await API.get(startEndpoint);
       alert(startResponse.data.message);
       speak(startVoiceMessage);
       setActiveWorkout(true);
-      setReps(reps);
-      setCalories(calories);
+      setActiveCounter(counterType);
+      setCaloriesPerRep(caloriesPerRep);
+      setReps(0);
+      setCalories(0);
       setTimer(0);
+    } catch (error) {
+      setActiveWorkout(false);
+      setActiveCounter(null);
+      console.error(error);
+      alert(errorMessage);
+    }
+  };
+
+  const stopWorkout = async ({
+    stopEndpoint,
+    workoutType,
+    caloriesPerRep,
+    stopVoiceMessage,
+    errorMessage,
+  }) => {
+    try {
+      const stopResponse = await API.get(stopEndpoint);
+      const finalReps = stopResponse.data.reps || 0;
+      const finalCalories = Math.round(finalReps * caloriesPerRep);
+
+      setReps(finalReps);
+      setCalories(finalCalories);
+      alert(stopResponse.data.message);
+      speak(stopVoiceMessage);
+      setActiveWorkout(false);
+      setActiveCounter(null);
 
       const saveResponse = await API.post("/save-workout", {
         email: "atif@gmail.com",
         workout_type: workoutType,
-        reps,
-        calories,
+        reps: finalReps,
+        calories: finalCalories,
       });
 
       showAnalysis(saveResponse.data.analysis);
       speak(
         `Workout completed. Your level is ${saveResponse.data.analysis.level}`
       );
-      setActiveWorkout(false);
       console.log("Workout Saved");
     } catch (error) {
-      setActiveWorkout(false);
       console.error(error);
       alert(errorMessage);
     }
@@ -70,22 +117,40 @@ function Workout() {
   const openPushup = () => {
     startWorkout({
       startEndpoint: "/start-pushup",
-      workoutType: "Pushups",
-      reps: 20,
-      calories: 120,
+      caloriesPerRep: 6,
       startVoiceMessage: "Pushup trainer started",
       errorMessage: "Failed to start pushup AI",
+      counterType: "pushup",
+    });
+  };
+
+  const stopPushup = () => {
+    stopWorkout({
+      stopEndpoint: "/stop-pushup",
+      workoutType: "Pushups",
+      caloriesPerRep: 6,
+      stopVoiceMessage: "Pushup trainer stopped",
+      errorMessage: "Failed to stop pushup AI",
     });
   };
 
   const openSquat = () => {
     startWorkout({
       startEndpoint: "/start-squat",
-      workoutType: "Squats",
-      reps: 15,
-      calories: 100,
+      caloriesPerRep: 7,
       startVoiceMessage: "Squat trainer started",
       errorMessage: "Failed to start squat AI",
+      counterType: "squat",
+    });
+  };
+
+  const stopSquat = () => {
+    stopWorkout({
+      stopEndpoint: "/stop-squat",
+      workoutType: "Squats",
+      caloriesPerRep: 7,
+      stopVoiceMessage: "Squat trainer stopped",
+      errorMessage: "Failed to stop squat AI",
     });
   };
 
@@ -128,9 +193,18 @@ function Workout() {
 
             <button
               onClick={openPushup}
-              className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-xl text-lg font-bold"
+              disabled={activeCounter !== null}
+              className="bg-blue-500 hover:bg-blue-600 disabled:bg-slate-600 disabled:cursor-not-allowed px-6 py-3 rounded-xl text-lg font-bold"
             >
               Start Pushups
+            </button>
+
+            <button
+              onClick={stopPushup}
+              disabled={activeCounter !== "pushup"}
+              className="block mx-auto mt-4 bg-red-500 hover:bg-red-600 disabled:bg-slate-600 disabled:cursor-not-allowed px-6 py-3 rounded-xl text-lg font-bold"
+            >
+              Stop Pushups
             </button>
           </div>
 
@@ -140,9 +214,18 @@ function Workout() {
 
             <button
               onClick={openSquat}
-              className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl text-lg font-bold"
+              disabled={activeCounter !== null}
+              className="bg-green-500 hover:bg-green-600 disabled:bg-slate-600 disabled:cursor-not-allowed px-6 py-3 rounded-xl text-lg font-bold"
             >
               Start Squats
+            </button>
+
+            <button
+              onClick={stopSquat}
+              disabled={activeCounter !== "squat"}
+              className="block mx-auto mt-4 bg-red-500 hover:bg-red-600 disabled:bg-slate-600 disabled:cursor-not-allowed px-6 py-3 rounded-xl text-lg font-bold"
+            >
+              Stop Squats
             </button>
           </div>
         </div>

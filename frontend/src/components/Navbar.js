@@ -1,13 +1,19 @@
-import React from "react";
+import React, {
+  useState
+} from "react";
 import { useNavigate } from "react-router-dom";
 
+
 function Navbar() {
+  const [menuOpen, setMenuOpen] =
+    useState(false);
   const navigate = useNavigate();
 
   const logout = () => {
     alert("Logged Out");
     navigate("/login");
   };
+
 
   return (
     <div className="w-full bg-slate-900 border-b border-slate-800 px-10 py-5 flex justify-between items-center">
@@ -25,33 +31,82 @@ function Navbar() {
           Dashboard
         </button>
 
-        <button
-          onClick={() => navigate("/workout")}
-          className="text-white hover:text-green-400 transition-all"
-        >
-          Workout
-        </button>
+        <div className="relative">
 
-        <button
-          onClick={() => navigate("/history")}
-          className="text-white hover:text-yellow-400 transition-all"
-        >
-          History
-        </button>
+          <button
+            onClick={() =>
+              setMenuOpen(!menuOpen)
+            }
+            className="text-white bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition-all"
+          >
 
-        <button
-  onClick={() => navigate("/diet")}
-  className="text-white hover:text-pink-400 transition-all"
->
-         Diet AI
-        </button>
+            ☰ Menu
 
-        <button
-  onClick={() => navigate("/chatbot")}
-  className="text-white hover:text-cyan-400 transition-all"
->
-         AI Coach
-        </button>
+          </button>
+
+          {menuOpen && (
+
+            <div className="absolute right-0 mt-3 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden">
+
+              {/* Profile */}
+
+              <button
+                onClick={() => navigate("/profile")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                👤 Profile
+              </button>
+
+              {/* History */}
+
+              <button
+                onClick={() => navigate("/history")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                📜 History
+              </button>
+
+              {/* Leaderboard */}
+
+              <button
+                onClick={() => navigate("/leaderboard")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                🏆 Leaderboard
+              </button>
+
+              {/* Achievements */}
+
+              <button
+                onClick={() => navigate("/achievements")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                🏅 Achievements
+              </button>
+
+              {/* Admin */}
+
+              <button
+                onClick={() => navigate("/admin")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                ⚙ Admin
+              </button>
+
+              {/* Gyms */}
+
+              <button
+                onClick={() => navigate("/gyms")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                🗺️ Nearby Gyms
+              </button>
+
+            </div>
+          )}
+
+        </div>
+
         <button
           onClick={logout}
           className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold text-white transition-all"

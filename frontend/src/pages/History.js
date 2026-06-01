@@ -47,7 +47,7 @@ function History() {
 
         <div className="overflow-x-auto">
 
-          <table className="w-full bg-slate-900 rounded-3xl overflow-hidden">
+          <table className="w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800">
 
             <thead className="bg-slate-800">
 
@@ -79,7 +79,7 @@ function History() {
 
                 <tr
                   key={index}
-                  className="border-b border-slate-800"
+                  className="border-b border-slate-800 hover:bg-slate-800 transition-all duration-300"
                 >
 
                   <td className="p-5">
@@ -90,13 +90,13 @@ function History() {
                     {item.workout_type}
                   </td>
 
-                  <td className="p-5">
-                    {item.reps}
+                  <td className="p-5 text-green-400 font-bold">
+                   💪 {item.reps}
                   </td>
 
-                  <td className="p-5">
-                    {item.calories}
-                  </td>
+                  <td className="p-5 text-yellow-400 font-bold">
+                  🔥 {item.calories}
+                   </td>
 
                 </tr>
 

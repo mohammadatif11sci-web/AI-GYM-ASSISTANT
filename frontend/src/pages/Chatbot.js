@@ -3,6 +3,7 @@ import React, {
 } from "react";
 
 import Navbar from "../components/Navbar";
+import API from "../services/api";
 
 function Chatbot() {
 
@@ -32,18 +33,19 @@ function Chatbot() {
 
     try {
 
-      const response = await fetch(
+      const response = await API.get("/chatbot", {
+        params: {
+          question: currentMessage,
+        },
+      });
 
-        `http://127.0.0.1:8000/chatbot?question=${encodeURIComponent(currentMessage)}`
-      );
-
-      const data = await response.json();
+      const data = response.data;
 
       const botMessage = {
 
         sender: "bot",
 
-        text: data.answer || data.response,
+        text: data.answer || data.response || "Please try asking that again.",
       };
 
       setChat((prev) => [
@@ -56,6 +58,20 @@ function Chatbot() {
     } catch (error) {
 
       console.log(error);
+
+      const botMessage = {
+
+        sender: "bot",
+
+        text: "I could not reach the fitness coach right now. Please check that the backend is running.",
+      };
+
+      setChat((prev) => [
+
+        ...prev,
+
+        botMessage
+      ]);
     }
 
     setMessage("");

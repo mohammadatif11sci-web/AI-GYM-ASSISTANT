@@ -12,6 +12,28 @@ from routes.prediction_routes import router as prediction_router
 from routes.achievement_routes import (
     router as achievement_router
 )
+from routes.performance_routes import router as performance_router
+from routes.recommendation_routes import (
+    router as recommendation_router
+)
+from routes.ml_routes import (
+    router as ml_router
+)
+from routes.food_routes import (
+    router as food_router
+)
+from routes.admin_routes import (
+    router as admin_router
+)
+from routes.leaderboard_routes import (
+    router as leaderboard_router
+)
+from routes.user_stats_routes import (
+    router as user_stats_router
+)
+from routes.gym_routes import (
+    router as gym_router
+)
 
 app = FastAPI()
 
@@ -25,6 +47,19 @@ app.add_middleware(
 )
 
 # Auth Routes
+app.include_router(
+    gym_router)
+app.include_router(
+    user_stats_router)
+app.include_router(
+    leaderboard_router)
+app.include_router(admin_router)
+app.include_router(food_router)
+app.include_router(
+    ml_router)
+app.include_router(
+    recommendation_router)
+app.include_router(performance_router)
 app.include_router(
     achievement_router)
 app.include_router(prediction_router)

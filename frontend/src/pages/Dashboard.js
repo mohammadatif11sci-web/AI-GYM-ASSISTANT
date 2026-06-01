@@ -1,15 +1,18 @@
 import React, {
   useEffect,
-  useState,
+  useState
 } from "react";
-
+import RecommendationCard from "../components/RecommendationCard";
 import { useNavigate } from "react-router-dom";
-
 import API from "../services/api";
-
 import Navbar from "../components/Navbar";
-
 import WorkoutChart from "../components/WorkoutChart";
+import PerformanceCard from "../components/PerformanceCard";
+import FoodAnalyzer from "../components/FoodAnalyzer";
+import NotificationCard from "../components/NotificationCard";
+import {
+  motion
+} from "framer-motion";
 
 function Dashboard() {
 
@@ -25,12 +28,21 @@ function Dashboard() {
   const [prediction, setPrediction] = useState(null);
 
   const [achievements, setAchievements] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
-    fetchStats();
-    fetchPrediction();
-    fetchAchievements();
+    const loadDashboard = async () => {
+      await Promise.all([
+        fetchStats(),
+        fetchPrediction(),
+        fetchAchievements()
+      ]);
+
+      setLoading(false);
+    };
+
+    loadDashboard();
 
   }, []);
 
@@ -84,6 +96,22 @@ function Dashboard() {
     }
   };
 
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen bg-slate-950 text-white">
+
+        <Navbar />
+
+        <div className="p-4 md:p-10">
+          Loading...
+        </div>
+
+      </div>
+    );
+  }
+
   return (
 
     <div className="min-h-screen bg-slate-950 text-white">
@@ -92,14 +120,14 @@ function Dashboard() {
       <Navbar />
 
       {/* Main Content */}
-      <div className="p-10">
+      <div className="p-4 md:p-10">
 
         {/* Header */}
         <div className="flex justify-between items-center mb-10">
 
           <div>
 
-            <h1 className="text-5xl font-bold">
+            <h1 className="text-3xl md:text-5xl font-bold">
               🏋️ AI Gym Dashboard
             </h1>
 
@@ -128,7 +156,7 @@ function Dashboard() {
               💪 Total Workouts
             </h2>
 
-            <p className="text-5xl font-bold text-blue-400">
+            <p className="text-3xl md:text-5xl font-bold text-blue-400">
               {stats.total_workouts}
             </p>
 
@@ -141,7 +169,7 @@ function Dashboard() {
               🔥 Calories Burned
             </h2>
 
-            <p className="text-5xl font-bold text-red-400">
+            <p className="text-3xl md:text-5xl font-bold text-red-400">
               {stats.total_calories}
             </p>
 
@@ -154,7 +182,7 @@ function Dashboard() {
               ⚡ Workout Streak
             </h2>
 
-            <p className="text-5xl font-bold text-green-400">
+            <p className="text-3xl md:text-5xl font-bold text-green-400">
               5 Days
             </p>
 
@@ -218,10 +246,38 @@ function Dashboard() {
         {/* Workout Analytics Chart */}
         <WorkoutChart />
 
+        <PerformanceCard />
+
+        <RecommendationCard />
+
+        <FoodAnalyzer />
+
+        <NotificationCard />
+
         {prediction && (
 
-          <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 mt-10">
+          <motion.div
 
+  initial={{
+    opacity: 0,
+    y: 50
+  }}
+
+  animate={{
+    opacity: 1,
+    y: 0
+  }}
+
+  transition={{
+    duration: 0.5
+  }}
+
+  whileHover={{
+    scale: 1.05
+  }}
+
+  className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-2xl"
+>
             <h2 className="text-3xl font-bold mb-6">
               AI Progress Prediction
             </h2>
@@ -245,7 +301,7 @@ function Dashboard() {
 
             </div>
 
-          </div>
+          </motion.div>
         )}
 
         <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 mt-10">

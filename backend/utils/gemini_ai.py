@@ -1,7 +1,14 @@
-import google.generativeai as genai
+import os
 
-genai.configure(
-    api_key="AIzaSyC2kKGQBdzayPmK7IMR6nWzDd26iX5lbpI"
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GOOGLE_AI_STUDIO_API_KEY = (
+    os.getenv("GOOGLE_AI_STUDIO_API_KEY")
+    or os.getenv("GEMINI_API_KEY")
+    or os.getenv("GOOGLE_API_KEY")
+    or "AIzaSyC2kKGQBdzayPmK7IMR6nWzDd26iX5lbpI"
 )
 
 MODEL_NAMES = [
@@ -11,6 +18,10 @@ MODEL_NAMES = [
 ]
 
 def ask_ai(question):
+    import google.generativeai as genai
+
+    genai.configure(api_key=GOOGLE_AI_STUDIO_API_KEY)
+
     last_error = None
 
     for model_name in MODEL_NAMES:

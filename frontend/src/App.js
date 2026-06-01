@@ -14,6 +14,11 @@ import History from "./pages/History";
 import Diet from "./pages/Diet";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Chatbot from "./pages/Chatbot";
+import AdminDashboard from "./pages/AdminDashboard";
+import Leaderboard from "./pages/Leaderboard";
+import Achievements from "./pages/Achievements";
+import Profile from "./pages/Profile";
+import GymRecommendations from "./pages/GymRecommendations";
 
 function App() {
 
@@ -22,6 +27,31 @@ function App() {
     <BrowserRouter>
 
       <Routes>
+
+        <Route
+  path="/gyms"
+  element={<GymRecommendations />}
+/>
+
+        <Route
+  path="/profile"
+  element={<Profile />}
+/>
+
+        <Route
+  path="/achievements"
+  element={<Achievements />}
+/>
+
+        <Route
+  path="/leaderboard"
+  element={<Leaderboard />}
+/>
+
+        <Route
+  path="/admin"
+  element={<AdminDashboard />}
+/>
 
         <Route
   path="/chatbot"

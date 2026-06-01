@@ -126,7 +126,7 @@ with mp_pose.Pose(
                 stage = "down"
                 counter += 1
 
-                print(counter)
+                print(counter, flush=True)
 
         except AttributeError:
             feedback = "No Pose Detected"

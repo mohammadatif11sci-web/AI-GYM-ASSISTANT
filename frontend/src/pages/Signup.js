@@ -80,12 +80,22 @@ function Signup() {
             className="p-4 rounded-xl bg-slate-800 text-white border border-slate-700 outline-none"
           />
 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 transition-all duration-300 p-4 rounded-xl font-bold text-lg"
-          >
-            Signup
-          </button>
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 transition-all duration-300 p-4 rounded-xl font-bold text-lg"
+            >
+              Signup
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="bg-green-500 hover:bg-green-600 transition-all duration-300 p-4 rounded-xl font-bold text-lg"
+            >
+              Login
+            </button>
+          </div>
 
         </form>
 
