@@ -11,9 +11,15 @@ function FoodAnalyzer() {
 
   const [file, setFile] =
     useState(null);
+  const [loading, setLoading] =
+    useState(false);
+  const [error, setError] =
+    useState("");
 
   const handleFileChange = (e) => {
 
+    setFoodData(null);
+    setError("");
     setFile(
       e.target.files[0]
     );
@@ -21,7 +27,10 @@ function FoodAnalyzer() {
 
   const analyzeFood = async () => {
 
-    if (!file) return;
+    if (!file) {
+      setError("Please upload a food image first.");
+      return;
+    }
 
     const formData =
       new FormData();
@@ -32,6 +41,8 @@ function FoodAnalyzer() {
     );
 
     try {
+      setLoading(true);
+      setError("");
 
       const response =
         await API.post(
@@ -55,6 +66,13 @@ function FoodAnalyzer() {
     } catch (error) {
 
       console.log(error);
+      setError(
+        error.response?.data?.detail ||
+        "Food analysis failed. Please try again."
+      );
+    } finally {
+
+      setLoading(false);
     }
   };
 
@@ -70,16 +88,25 @@ function FoodAnalyzer() {
 
       <input
         type="file"
+        accept="image/*"
         onChange={handleFileChange}
         className="mb-6"
       />
 
       <button
         onClick={analyzeFood}
+        disabled={loading}
         className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold mb-6"
       >
-        Analyze Food
+        {loading ? "Analyzing..." : "Analyze Food"}
       </button>
+
+      {error && (
+
+        <div className="bg-red-500/10 border border-red-500 text-red-300 p-4 rounded-2xl mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Result */}
 
