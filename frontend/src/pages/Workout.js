@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import API from "../services/api";
 import Navbar from "../components/Navbar";
 import { speak } from "../utils/voiceHelper";
@@ -10,6 +10,9 @@ function Workout() {
   const [activeWorkout, setActiveWorkout] = useState(false);
   const [activeCounter, setActiveCounter] = useState(null);
   const [caloriesPerRep, setCaloriesPerRep] = useState(0);
+  const [cameraError, setCameraError] = useState("");
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
 
   useEffect(() => {
     let interval;
@@ -43,6 +46,55 @@ function Workout() {
     return () => clearInterval(interval);
   }, [activeCounter, caloriesPerRep]);
 
+  const stopCamera = useCallback(() => {
+    if (!streamRef.current) return;
+
+    streamRef.current.getTracks().forEach((track) => {
+      track.stop();
+    });
+
+    streamRef.current = null;
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  }, []);
+
+  const startCamera = useCallback(async () => {
+    try {
+      setCameraError("");
+
+      if (streamRef.current) {
+        return true;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false,
+      });
+
+      streamRef.current = stream;
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      setCameraError(
+        "Camera access failed. Please allow webcam permission and use HTTPS or localhost."
+      );
+      return false;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, [stopCamera]);
+
   const showAnalysis = (analysis) => {
     alert(
       `AI Analysis\n\n` +
@@ -60,6 +112,12 @@ function Workout() {
     counterType,
   }) => {
     try {
+      const cameraStarted = await startCamera();
+
+      if (!cameraStarted) {
+        return;
+      }
+
       const startResponse = await API.get(startEndpoint);
       alert(startResponse.data.message);
       speak(startVoiceMessage);
@@ -72,6 +130,7 @@ function Workout() {
     } catch (error) {
       setActiveWorkout(false);
       setActiveCounter(null);
+      stopCamera();
       console.error(error);
       alert(errorMessage);
     }
@@ -85,13 +144,6 @@ function Workout() {
     errorMessage,
   }) => {
     try {
-      const userEmail = localStorage.getItem("userEmail");
-
-      if (!userEmail) {
-        alert("Please log in before saving workout data.");
-        return;
-      }
-
       const stopResponse = await API.get(stopEndpoint);
       const finalReps = stopResponse.data.reps || 0;
       const finalCalories = Math.round(finalReps * caloriesPerRep);
@@ -102,9 +154,10 @@ function Workout() {
       speak(stopVoiceMessage);
       setActiveWorkout(false);
       setActiveCounter(null);
+      stopCamera();
 
       const saveResponse = await API.post("/save-workout", {
-        email: userEmail,
+        email: "atif@gmail.com",
         workout_type: workoutType,
         reps: finalReps,
         calories: finalCalories,
@@ -191,6 +244,26 @@ function Workout() {
 
             <p className="text-5xl text-green-400 font-bold">{timer}s</p>
           </div>
+        </div>
+
+        <div className="bg-slate-800 p-6 rounded-2xl shadow-xl mb-10">
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Live Webcam
+          </h2>
+
+          {cameraError && (
+            <div className="bg-red-500/10 border border-red-500 text-red-300 p-4 rounded-xl mb-6">
+              {cameraError}
+            </div>
+          )}
+
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full max-h-[520px] rounded-2xl bg-slate-950 object-contain"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

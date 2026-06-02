@@ -1,8 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState
-} from "react";
+import React from "react";
 
 import {
   LineChart,
@@ -14,124 +10,101 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import API from "../services/api";
+const data = [
+
+  {
+    day: "Mon",
+    workouts: 2,
+    calories: 200,
+  },
+
+  {
+    day: "Tue",
+    workouts: 4,
+    calories: 350,
+  },
+
+  {
+    day: "Wed",
+    workouts: 3,
+    calories: 300,
+  },
+
+  {
+    day: "Thu",
+    workouts: 5,
+    calories: 500,
+  },
+
+  {
+    day: "Fri",
+    workouts: 6,
+    calories: 650,
+  },
+
+  {
+    day: "Sat",
+    workouts: 4,
+    calories: 400,
+  },
+
+  {
+    day: "Sun",
+    workouts: 7,
+    calories: 800,
+  },
+];
 
 function WorkoutChart() {
-  const [data, setData] = useState([]);
-
-  const buildWeeklyData = useCallback((workouts) => {
-    const today = new Date();
-    const days = [];
-
-    for (let index = 6; index >= 0; index -= 1) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - index);
-
-      days.push({
-        key: date.toISOString().slice(0, 10),
-        day: date.toLocaleDateString(
-          "en-US",
-          {
-            weekday: "short"
-          }
-        ),
-        workouts: 0,
-        calories: 0,
-      });
-    }
-
-    workouts.forEach((workout) => {
-      if (!workout.created_at) return;
-
-      const workoutDate = new Date(workout.created_at)
-        .toISOString()
-        .slice(0, 10);
-      const day = days.find(
-        (item) => item.key === workoutDate
-      );
-
-      if (!day) return;
-
-      day.workouts += 1;
-      day.calories += workout.calories || 0;
-    });
-
-    return days.map(({ key, ...day }) => day);
-  }, []);
-
-  const fetchWorkoutHistory = useCallback(async () => {
-    try {
-      const response = await API.get("/history");
-      const groupedData = buildWeeklyData(response.data);
-
-      setData(groupedData);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [buildWeeklyData]);
-
-  useEffect(() => {
-    fetchWorkoutHistory();
-  }, [fetchWorkoutHistory]);
-
-  const hasCloudData = data.some(
-    (item) => item.workouts > 0 || item.calories > 0
-  );
 
   return (
 
     <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 mt-10 shadow-xl">
 
       <h2 className="text-3xl font-bold mb-8 text-white">
-        Weekly Workout Analytics
+        📈 Weekly Workout Analytics
       </h2>
 
-      {!hasCloudData ? (
+      <ResponsiveContainer
+        width="100%"
+        height={350}
+      >
 
-        <p className="text-slate-400">
-          No cloud workout history yet.
-        </p>
-      ) : (
+        <LineChart data={data}>
 
-        <ResponsiveContainer
-          width="100%"
-          height={350}
-        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#334155"
+          />
 
-          <LineChart data={data}>
+          <XAxis
+            dataKey="day"
+            stroke="#94a3b8"
+          />
 
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#334155"
-            />
+          <YAxis stroke="#94a3b8" />
 
-            <XAxis
-              dataKey="day"
-              stroke="#94a3b8"
-            />
+          <Tooltip />
 
-            <YAxis stroke="#94a3b8" />
+          {/* Workout Line */}
+          <Line
+            type="monotone"
+            dataKey="workouts"
+            stroke="#3b82f6"
+            strokeWidth={4}
+          />
 
-            <Tooltip />
+          {/* Calories Line */}
+          <Line
+            type="monotone"
+            dataKey="calories"
+            stroke="#22c55e"
+            strokeWidth={4}
+          />
 
-            <Line
-              type="monotone"
-              dataKey="workouts"
-              stroke="#3b82f6"
-              strokeWidth={4}
-            />
+        </LineChart>
 
-            <Line
-              type="monotone"
-              dataKey="calories"
-              stroke="#22c55e"
-              strokeWidth={4}
-            />
-
-          </LineChart>
-
-        </ResponsiveContainer>
-      )}
+      </ResponsiveContainer>
 
     </div>
   );

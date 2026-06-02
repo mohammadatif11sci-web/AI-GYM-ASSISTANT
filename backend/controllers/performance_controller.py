@@ -1,24 +1,13 @@
-from database.db import db
 from ai.performance_analyzer import analyze_workout
 
 
 def get_performance_report():
-    workouts = list(
-        db.workouts.find(
-            {},
-            {
-                "_id": 0,
-                "calories": 1
-            }
-        )
-    )
 
-    workout_data = {
-        "total_workouts": len(workouts),
-        "total_calories": sum(
-            workout.get("calories", 0)
-            for workout in workouts
-        )
+    sample_data = {
+        "total_workouts": 7,
+        "total_calories": 3200
     }
 
-    return analyze_workout(workout_data)
+    result = analyze_workout(sample_data)
+
+    return result

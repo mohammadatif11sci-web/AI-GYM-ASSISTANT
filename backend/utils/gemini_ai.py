@@ -8,6 +8,7 @@ GOOGLE_AI_STUDIO_API_KEY = (
     os.getenv("GOOGLE_AI_STUDIO_API_KEY")
     or os.getenv("GEMINI_API_KEY")
     or os.getenv("GOOGLE_API_KEY")
+    or "AIzaSyC2kKGQBdzayPmK7IMR6nWzDd26iX5lbpI"
 )
 
 MODEL_NAMES = [
@@ -17,9 +18,6 @@ MODEL_NAMES = [
 ]
 
 def ask_ai(question):
-    if not GOOGLE_AI_STUDIO_API_KEY:
-        raise ValueError("Google AI API key is not configured")
-
     import google.generativeai as genai
 
     genai.configure(api_key=GOOGLE_AI_STUDIO_API_KEY)

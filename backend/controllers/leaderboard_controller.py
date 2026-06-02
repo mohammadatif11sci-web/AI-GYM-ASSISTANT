@@ -1,52 +1,24 @@
-from database.db import db
-
-
 def get_leaderboard():
-    leaderboard = list(
-        db.workouts.aggregate(
-            [
-                {
-                    "$group": {
-                        "_id": "$email",
-                        "calories": {
-                            "$sum": "$calories"
-                        },
-                        "workouts": {
-                            "$sum": 1
-                        }
-                    }
-                },
-                {
-                    "$sort": {
-                        "calories": -1
-                    }
-                },
-                {
-                    "$limit": 50
-                }
-            ]
-        )
-    )
 
-    users = {
-        user.get("email"): user.get("name")
-        for user in db.users.find(
-            {},
-            {
-                "_id": 0,
-                "email": 1,
-                "name": 1
-            }
-        )
-    }
+    leaderboard = [
 
-    return [
         {
-            "rank": index + 1,
-            "name": users.get(item["_id"], item["_id"]),
-            "email": item["_id"],
-            "calories": item.get("calories", 0),
-            "workouts": item.get("workouts", 0)
+            "rank": 1,
+            "name": "Atif",
+            "calories": 9800
+        },
+
+        {
+            "rank": 2,
+            "name": "Alex",
+            "calories": 8500
+        },
+
+        {
+            "rank": 3,
+            "name": "Sarah",
+            "calories": 8100
         }
-        for index, item in enumerate(leaderboard)
     ]
+
+    return leaderboard
