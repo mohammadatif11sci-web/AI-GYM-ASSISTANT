@@ -9,6 +9,11 @@ function Navbar() {
     useState(false);
   const navigate = useNavigate();
 
+  const goTo = (path) => {
+    setMenuOpen(false);
+    navigate(path);
+  };
+
   const logout = () => {
     alert("Logged Out");
     navigate("/login");
@@ -40,7 +45,7 @@ function Navbar() {
             className="text-white bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition-all"
           >
 
-            ☰ Menu
+            Menu
 
           </button>
 
@@ -48,58 +53,53 @@ function Navbar() {
 
             <div className="absolute right-0 mt-3 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden">
 
-              {/* Profile */}
-
               <button
-                onClick={() => navigate("/profile")}
+                onClick={() => goTo("/profile")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                👤 Profile
+                Profile
               </button>
 
-              {/* History */}
-
               <button
-                onClick={() => navigate("/history")}
+                onClick={() => goTo("/history")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                📜 History
+                History
               </button>
 
-              {/* Leaderboard */}
-
               <button
-                onClick={() => navigate("/leaderboard")}
+                onClick={() => goTo("/leaderboard")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                🏆 Leaderboard
+                Leaderboard
               </button>
 
-              {/* Achievements */}
-
               <button
-                onClick={() => navigate("/achievements")}
+                onClick={() => goTo("/achievements")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                🏅 Achievements
+                Achievements
               </button>
 
-              {/* Admin */}
-
               <button
-                onClick={() => navigate("/admin")}
+                onClick={() => goTo("/admin")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                ⚙ Admin
+                Admin
               </button>
 
-              {/* Gyms */}
-
               <button
-                onClick={() => navigate("/gyms")}
+                onClick={() => goTo("/gyms")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                🗺️ Nearby Gyms
+                Nearby Gyms
+              </button>
+
+              <button
+                onClick={() => goTo("/chatbot")}
+                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+                AI Coach
               </button>
 
             </div>
