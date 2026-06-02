@@ -38,11 +38,22 @@ def chatbot_response(question):
     try:
         from utils.gemini_ai import ask_ai
 
-        answer = ask_ai(question)
+        prompt = (
+            "You are AI Gym Coach, a helpful fitness assistant. "
+            "Give practical, safe, concise answers for workouts, diet, form, "
+            "recovery, and motivation. Format the answer cleanly with short "
+            "sections and bullet points when useful. Avoid medical diagnosis. "
+            "If the user asks for unsafe advice, suggest a safer alternative.\n\n"
+            f"User question: {question}"
+        )
+
+        result = ask_ai(prompt)
 
         return {
             "question": question,
-            "answer": answer,
+            "answer": result["text"],
+            "model": result["model"],
+            "provider": "Gemini",
         }
 
     except Exception as error:

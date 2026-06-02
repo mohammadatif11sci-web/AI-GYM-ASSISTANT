@@ -8,7 +8,6 @@ GOOGLE_AI_STUDIO_API_KEY = (
     os.getenv("GOOGLE_AI_STUDIO_API_KEY")
     or os.getenv("GEMINI_API_KEY")
     or os.getenv("GOOGLE_API_KEY")
-    or "AIzaSyC2kKGQBdzayPmK7IMR6nWzDd26iX5lbpI"
 )
 
 MODEL_NAMES = [
@@ -18,6 +17,9 @@ MODEL_NAMES = [
 ]
 
 def ask_ai(question):
+    if not GOOGLE_AI_STUDIO_API_KEY:
+        raise ValueError("Google AI API key is not configured")
+
     import google.generativeai as genai
 
     genai.configure(api_key=GOOGLE_AI_STUDIO_API_KEY)
@@ -29,10 +31,18 @@ def ask_ai(question):
             model = genai.GenerativeModel(model_name)
 
             response = model.generate_content(
-                question
+                question,
+                generation_config={
+                    "temperature": 0.7,
+                    "top_p": 0.9,
+                    "max_output_tokens": 700,
+                }
             )
 
-            return response.text
+            return {
+                "model": model_name,
+                "text": response.text
+            }
 
         except Exception as error:
             last_error = error
