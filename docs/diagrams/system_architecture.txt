@@ -1,0 +1,82 @@
+AI Gym Assistant - System Architecture
+======================================
+
++--------------------------+
+|        User Browser      |
+|  React + Tailwind CSS    |
+|  MediaPipe Pose Logic    |
++------------+-------------+
+             |
+             | HTTP / JSON
+             v
++--------------------------+
+|      FastAPI Backend     |
+|  main.py                 |
+|  API Routes              |
+|  Controllers             |
++------------+-------------+
+             |
+             | PyMongo
+             v
++--------------------------+
+|      MongoDB Atlas       |
+|  ai_gym_database         |
+|  users, workouts         |
++--------------------------+
+
+Supporting AI Modules
+---------------------
+
++--------------------------+
+| Workout Analysis         |
+| - repetition counting    |
+| - form/performance score |
+| - feedback generation    |
++--------------------------+
+
++--------------------------+
+| Recommendation Modules   |
+| - diet planning          |
+| - progress prediction    |
+| - achievements           |
+| - fitness scoring        |
++--------------------------+
+
+Frontend Pages
+--------------
+
+Signup -> Login -> Dashboard -> Workout
+                         |       |
+                         |       +--> save workout results
+                         |
+                         +--> History
+                         +--> Diet
+                         +--> Chatbot
+                         +--> Achievements
+                         +--> Leaderboard
+                         +--> Profile
+                         +--> Gym Recommendations
+
+Backend Route Groups
+--------------------
+
+/signup, /login              Authentication
+/save-workout                Workout storage and analysis
+/dashboard-stats             Dashboard statistics
+/workout-history             Workout history
+/diet-plan                   Diet recommendation
+/chatbot                     Fitness chatbot
+/prediction                  Progress prediction
+/achievements                Achievement data
+/performance-report          Performance report
+/recommendations             Workout recommendations
+/leaderboard                 Ranking data
+/user-stats/{email}          User profile statistics
+/nearby-gyms                 Gym recommendations
+
+Deployment
+----------
+
+Frontend: Vercel
+Backend: Render
+Database: MongoDB Atlas
