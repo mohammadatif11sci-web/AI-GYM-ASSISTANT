@@ -10,6 +10,9 @@ function Leaderboard() {
   const [leaders, setLeaders] =
     useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
+
   useEffect(() => {
 
     fetchLeaderboard();
@@ -20,6 +23,8 @@ function Leaderboard() {
 
     try {
 
+      setLoading(true);
+
       const response = await API.get(
         "/leaderboard"
       );
@@ -29,6 +34,10 @@ function Leaderboard() {
     } catch (error) {
 
       console.log(error);
+
+    } finally {
+
+      setLoading(false);
     }
   };
 
@@ -37,14 +46,12 @@ function Leaderboard() {
     <div className="min-h-screen bg-slate-950 text-white p-10">
 
       <h1 className="text-5xl font-bold mb-10">
-        🏆 Global Leaderboard
+        Global Leaderboard
       </h1>
 
       <div className="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
 
-        {/* Header */}
-
-        <div className="grid grid-cols-3 bg-slate-800 p-6 text-2xl font-bold">
+        <div className="grid grid-cols-5 bg-slate-800 p-6 text-lg font-bold">
 
           <div>Rank</div>
 
@@ -52,27 +59,35 @@ function Leaderboard() {
 
           <div>Calories</div>
 
+          <div>Workouts</div>
+
+          <div>Total Reps</div>
+
         </div>
 
-        {/* Users */}
+        {loading && (
+
+          <div className="p-6 text-slate-300">
+            Loading leaderboard...
+          </div>
+        )}
+
+        {!loading && leaders.length === 0 && (
+
+          <div className="p-6 text-slate-300">
+            No workout data found yet.
+          </div>
+        )}
 
         {leaders.map((user, index) => (
 
           <div
-            key={index}
-            className="grid grid-cols-3 p-6 border-b border-slate-800 text-xl hover:bg-slate-800 transition-all"
+            key={user.email || index}
+            className="grid grid-cols-5 p-6 border-b border-slate-800 text-lg hover:bg-slate-800 transition-all"
           >
 
             <div>
-
-              {user.rank === 1 && "🥇"}
-
-              {user.rank === 2 && "🥈"}
-
-              {user.rank === 3 && "🥉"}
-
-              {" "}#{user.rank}
-
+              #{user.rank}
             </div>
 
             <div>
@@ -80,7 +95,15 @@ function Leaderboard() {
             </div>
 
             <div className="text-yellow-400 font-bold">
-              🔥 {user.calories}
+              {user.calories}
+            </div>
+
+            <div>
+              {user.total_workouts}
+            </div>
+
+            <div>
+              {user.total_reps}
             </div>
 
           </div>
