@@ -60,6 +60,7 @@ function Navbar() {
                 Profile
               </button>
 
+
               <button
                 onClick={() => goTo("/history")}
                 className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
