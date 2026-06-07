@@ -48,3 +48,53 @@ def ask_ai(question):
             last_error = error
 
     raise last_error
+
+from PIL import Image
+
+
+def analyze_food_image(
+    image_path,
+    prompt
+):
+    if not GOOGLE_AI_STUDIO_API_KEY:
+        raise ValueError(
+            "Google AI API key is not configured"
+        )
+
+    import google.generativeai as genai
+
+    genai.configure(
+        api_key=GOOGLE_AI_STUDIO_API_KEY
+    )
+
+    image = Image.open(
+        image_path
+    )
+
+    last_error = None
+
+    for model_name in MODEL_NAMES:
+
+        try:
+
+            model = genai.GenerativeModel(
+                model_name
+            )
+
+            response = model.generate_content(
+                [
+                    prompt,
+                    image
+                ]
+            )
+
+            return {
+                "model": model_name,
+                "text": response.text
+            }
+
+        except Exception as error:
+
+            last_error = error
+
+        raise last_error

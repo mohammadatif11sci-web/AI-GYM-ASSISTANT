@@ -13,6 +13,8 @@ import NotificationCard from "../components/NotificationCard";
 import {
   motion
 } from "framer-motion";
+import BMIDietPlanner from "../components/BMIDietPlanner";
+import FitnessChallenges from "../components/FitnessChallenges";
 
 function Dashboard() {
 
@@ -250,6 +252,8 @@ function Dashboard() {
 
         <RecommendationCard />
 
+        <BMIDietPlanner />
+
         <FoodAnalyzer />
 
         <NotificationCard />
@@ -332,7 +336,10 @@ function Dashboard() {
 
       </div>
 
-    </div>
+       <FitnessChallenges />
+
+      </div>
+
   );
 }
 
