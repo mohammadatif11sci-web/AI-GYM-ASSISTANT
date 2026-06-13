@@ -17,6 +17,8 @@ import Leaderboard from "./pages/Leaderboard";
 import Achievements from "./pages/Achievements";
 import Profile from "./pages/Profile";
 import GymRecommendations from "./pages/GymRecommendations";
+import FoodAnalyzerPage from "./pages/FoodAnalyzerPage";
+import FitnessChallengesPage from "./pages/FitnessChallengesPage";
 
 function App() {
 
@@ -25,8 +27,24 @@ function App() {
     <BrowserRouter>
 
       <Routes>
-        
 
+
+        <Route
+  path="/food-analyzer"
+  element={
+    <ProtectedRoute>
+      <FoodAnalyzerPage />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+  path="/fitness-challenges"
+  element={
+    <ProtectedRoute>
+      <FitnessChallengesPage />
+    </ProtectedRoute>
+  }
+/>
         <Route
   path="/gyms"
   element={<GymRecommendations />}

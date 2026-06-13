@@ -252,9 +252,9 @@ function Dashboard() {
 
         <RecommendationCard />
 
-        <BMIDietPlanner />
+        {/* <BMIDietPlanner /> */}
 
-        <FoodAnalyzer />
+        {/* <FoodAnalyzer /> */}
 
         <NotificationCard />
 
@@ -336,7 +336,7 @@ function Dashboard() {
 
       </div>
 
-       <FitnessChallenges />
+       {/* <FitnessChallenges /> */}
 
       </div>
 

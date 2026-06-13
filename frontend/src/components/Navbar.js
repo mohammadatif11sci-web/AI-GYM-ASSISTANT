@@ -39,6 +39,14 @@ function Navbar() {
         <div className="relative">
 
           <button
+           onClick={() => navigate("/workout")}
+           className="text-white hover:text-blue-400 transition-all"
+          >
+          Workout
+          </button>
+
+
+          <button
             onClick={() =>
               setMenuOpen(!menuOpen)
             }
@@ -54,54 +62,74 @@ function Navbar() {
             <div className="absolute right-0 mt-3 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden">
 
               <button
-                onClick={() => goTo("/profile")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+               onClick={() => goTo("/profile")}
+              className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                Profile
-              </button>
-
-
-              <button
-                onClick={() => goTo("/history")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
-              >
-                History
-              </button>
+            👤 Profile
+            </button>
 
               <button
-                onClick={() => goTo("/leaderboard")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+               onClick={() => goTo("/history")}
+              className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                Leaderboard
-              </button>
+           📜 Workout History
+            </button>
+
+              <button
+                onClick={() => goTo("/diet")}
+              className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+           🧮 BMI & Diet Planner
+           </button>
+
+              <button
+               onClick={() => goTo("/food-analyzer")}
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+           🍽️ AI Food Analyzer
+           </button>
+
+              <button
+               onClick={() => goTo("/fitness-challenges")}
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              > 
+           🎯 Fitness Challenges
+           </button>
+
+              <button
+               onClick={() => goTo("/leaderboard")}
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+           🏆 Leaderboard
+            </button>
 
               <button
                 onClick={() => goTo("/achievements")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                Achievements
-              </button>
+           🥇 Achievements
+            </button>
 
               <button
-                onClick={() => goTo("/admin")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+               onClick={() => goTo("/gyms")}
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                Admin
-              </button>
-
-              <button
-                onClick={() => goTo("/gyms")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
-              >
-                Nearby Gyms
-              </button>
+           📍 Nearby Gyms
+            </button>
 
               <button
                 onClick={() => goTo("/chatbot")}
-                className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
               >
-                AI Coach
-              </button>
+           🤖 AI Coach
+            </button>
+
+              <button
+               onClick={() => goTo("/admin")}
+               className="w-full text-left px-5 py-4 hover:bg-slate-800 transition-all"
+              >
+           ⚙️ Admin
+           </button>
 
             </div>
           )}
