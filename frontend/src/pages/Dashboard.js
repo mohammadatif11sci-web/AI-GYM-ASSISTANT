@@ -8,13 +8,10 @@ import API from "../services/api";
 import Navbar from "../components/Navbar";
 import WorkoutChart from "../components/WorkoutChart";
 import PerformanceCard from "../components/PerformanceCard";
-import FoodAnalyzer from "../components/FoodAnalyzer";
 import NotificationCard from "../components/NotificationCard";
 import {
   motion
 } from "framer-motion";
-import BMIDietPlanner from "../components/BMIDietPlanner";
-import FitnessChallenges from "../components/FitnessChallenges";
 
 function Dashboard() {
 
